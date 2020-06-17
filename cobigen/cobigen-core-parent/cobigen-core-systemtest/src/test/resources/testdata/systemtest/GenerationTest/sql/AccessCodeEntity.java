@@ -24,55 +24,27 @@ import com.devonfw.application.jtqj.general.dataaccess.api.ApplicationPersistenc
 import com.devonfw.application.jtqj.queuemanagement.dataaccess.api.QueueEntity;
 import com.devonfw.application.jtqj.visitormanagement.dataaccess.api.VisitorEntity;
 
-/**
- *
- */
 @Entity
-@Table(name = "TestEntitySetName")
-public class TestEntity {
-  
-    @Column(name = "column_name", nullable = false)
-    private Long LongVarCol;
+@Table(name = "AccessCode")
+public class AccessCodeEntity extends ApplicationPersistenceEntity implements AccessCode {
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long accessCodeId;
     
-    @Column(name = "column_name_nullable")
-    private Long LongVar;
-    
-    @Column(name = "other_identity_name")
-    private OtherEntity otherEntity;
-    
-    private List<OtherEntity> otherEntities;
-    
+    @Size(min = 2, max = 5)
+    private String ticketNumber;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp creationTime;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp startTime;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Timestamp endTime;
+
     private VisitorEntity visitor;
 
     private QueueEntity queue;
-   
-    //entity
-    /*
-    private OtherEntity other;
-    private QueueEntity queue;
-    */
- // Primary data type   
-/*    
-    private Long LongVar;
-    private long longVar;
-    private int intVar;
-    private Integer IntVar;
     
-    private boolean booleanVar;
-    private Boolean BooleanVar;
-
-    private String stringVar; 
-    
-    private Date date;
-    
-    private Timestamp timestamp;
-    
-    private Instant instant;
-    
-    private Year year;
-    
-    private Time time;
-    
-    private UUID uuid;
-    */
 }

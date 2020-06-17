@@ -1,10 +1,15 @@
-CREATE TABLE Test (        
-    alter table of Entity
+ 
+CREATE TABLE TestEntitySetName (        
   id                            BIGINT NOT NULL AUTO_INCREMENT,
   modificationCounter           INTEGER NOT NULL,
   column_name                   BIGINTNOT NULL,
   column_name_nullable          BIGINT,
-  idOtherEntity                 BIGINT NOT NULL,
-  CONSTRAINT PK_Test PRIMARY KEY(id),
-  CONSTRAINT FK_Test_idOtherEntity FOREIGN KEY(idOtherEntity) REFERENCES Other(id) NOCHECK,
-)
+  other_identity_name           BIGINT NOT NULL,
+  otherEntities                 BIGINT,
+  idVisitor                     BIGINT NOT NULL,
+  idQueue                       BIGINT NOT NULL,
+  CONSTRAINT PK_TestEntitySetName PRIMARY KEY(id),
+  CONSTRAINT FK_Test_other_identity_name FOREIGN KEY(other_identity_name) REFERENCES Other(id),
+  CONSTRAINT FK_Test_idVisitor FOREIGN KEY(idVisitor) REFERENCES Visitor(id),
+  CONSTRAINT FK_Test_idQueue FOREIGN KEY(idQueue) REFERENCES Queue(id),
+);
