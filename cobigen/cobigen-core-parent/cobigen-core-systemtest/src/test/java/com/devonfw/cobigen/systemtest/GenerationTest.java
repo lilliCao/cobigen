@@ -23,6 +23,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.devonfw.cobigen.api.CobiGen;
 import com.devonfw.cobigen.api.exception.InvalidConfigurationException;
@@ -34,21 +36,59 @@ import com.devonfw.cobigen.api.to.IncrementTo;
 import com.devonfw.cobigen.api.to.MatcherTo;
 import com.devonfw.cobigen.api.to.TemplateTo;
 import com.devonfw.cobigen.impl.CobiGenFactory;
+import com.devonfw.cobigen.impl.aop.BeanFactory;
+import com.devonfw.cobigen.impl.config.ConfigurationHolder;
+import com.devonfw.cobigen.impl.config.entity.Trigger;
 import com.devonfw.cobigen.impl.extension.PluginRegistry;
+import com.devonfw.cobigen.impl.extension.TemplateEngineRegistry;
 import com.devonfw.cobigen.impl.model.ModelBuilderImpl;
+import com.devonfw.cobigen.javaplugin.JavaPluginActivator;
 import com.devonfw.cobigen.systemtest.common.AbstractApiTest;
 import com.devonfw.cobigen.systemtest.util.PluginMockFactory;
+import com.devonfw.cobigen.tempeng.freemarker.FreeMarkerTemplateEngine;
 import com.devonfw.cobigen.test.matchers.MatcherToMatcher;
+import com.google.common.base.Charsets;
 
 /**
  * Test suite for generation purposes.
  */
 public class GenerationTest extends AbstractApiTest {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractApiTest.class);
+
     /**
      * Root path to all resources used in this test case
      */
     private static String testFileRootPath = apiTestsRootPath + "GenerationTest/";
+
+    @Test
+    public void testGenerationSql() throws Exception {
+        // TODO how to run the whole system!!!!!
+        PluginRegistry.loadPlugin(JavaPluginActivator.class);
+        TemplateEngineRegistry.register(FreeMarkerTemplateEngine.class);
+
+        String rootTest = testFileRootPath + "sql/";
+        File inputFile = new File(rootTest + "TestEntity.java");
+        File target = new File(rootTest, "generated.txt");
+
+        LOG.info("Initial cobigen...............................");
+        ConfigurationHolder configurationHolder = new ConfigurationHolder(Paths.get(rootTest));
+        Trigger trigger = configurationHolder.readContextConfiguration().getTriggers().get(0);
+        configurationHolder.readTemplatesConfiguration(trigger).getAllTemplates().forEach(e -> LOG.info(e.getName()));
+        BeanFactory beanFactory = new BeanFactory();
+        beanFactory.addManuallyInitializedBean(configurationHolder);
+        CobiGen cobigen = beanFactory.createBean(CobiGen.class);
+        Object input = cobigen.read("java", inputFile.toPath(), Charsets.UTF_8);
+
+        List<TemplateTo> templates = cobigen.getMatchingTemplates(input);
+        assertThat(templates.get(0).getId()).containsSequence("t1");
+
+        GenerationReportTo report = cobigen.generate(input, templates.get(0), Paths.get(rootTest));
+        LOG.info("RESULT-------------------------------------------------");
+        LOG.info(Files.readString(target.toPath()));
+        LOG.info("-------------------------------------------------------");
+
+    }
 
     /**
      * Tests that sources get overwritten if merge strategy override is configured.

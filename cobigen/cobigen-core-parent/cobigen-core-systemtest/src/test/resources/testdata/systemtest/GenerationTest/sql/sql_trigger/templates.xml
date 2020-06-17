@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<templatesConfiguration xmlns="http://capgemini.com/devonfw/cobigen/TemplatesConfiguration"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1">
+
+  <templates>
+        <template name="t1" templateFile="templates/generated.sql.ftl" destinationPath="generated.txt" mergeStrategy="override"/>
+  </templates>
+
+  <increments>
+    <increment name="sql" description="Generate SQL">
+      <templateRef ref="t1"/>
+    </increment>
+  </increments>
+</templatesConfiguration>

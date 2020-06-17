@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<contextConfiguration xmlns="http://capgemini.com/devonfw/cobigen/ContextConfiguration" version="2.1">
+    <trigger id="sql_trigger" type="java" templateFolder="sql_trigger">
+        <matcher type="fqn" value=".*">
+            <variableAssignment type="constant" key="entityName" value="Test"/>
+        </matcher>
+    </trigger>
+</contextConfiguration>

@@ -1,0 +1,10 @@
+CREATE TABLE Test (        
+    alter table of Entity
+  id                            BIGINT NOT NULL AUTO_INCREMENT,
+  modificationCounter           INTEGER NOT NULL,
+  column_name                   BIGINTNOT NULL,
+  column_name_nullable          BIGINT,
+  idOtherEntity                 BIGINT NOT NULL,
+  CONSTRAINT PK_Test PRIMARY KEY(id),
+  CONSTRAINT FK_Test_idOtherEntity FOREIGN KEY(idOtherEntity) REFERENCES Other(id) NOCHECK,
+)
